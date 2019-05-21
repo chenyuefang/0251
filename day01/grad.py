@@ -3,6 +3,7 @@
 2.负梯度
 3.学习率
 """
+import numpy as np
 
 
 def get_grad(theta, x, y):
@@ -16,8 +17,12 @@ def get_grad(theta, x, y):
 def get_cost(theta, x, y):
     """
     学习率
+     return (theta * x - y) ** 2  单个X
+     X:是一个矩阵
+     Y:是一个矩阵
+     Z:是一个矩阵
     """
-    return (theta * x - y) ** 2
+    return np.sum((np.dot(x, theta) - y) ** 2)
 
 
 def gradient_descending(theta, x, y, learning_rate):
@@ -26,11 +31,11 @@ def gradient_descending(theta, x, y, learning_rate):
     """
     for _ in range(20):
         theta = theta + get_grad(theta, x, y) * learning_rate
-        print(get_cost(theta,x,y))
+        print(get_cost(theta, x, y))
 
 
-y = 20
-x = 1.1
-theta = 0
-learning_rate = 0.1
-theta = gradient_descending(theta, x, y, learning_rate)
+x = np.array([[1, 2], [1, 2]])
+y = np.array([0, 0])
+theta = np.array([1, 1])
+
+print(get_cost(theta, x, y))
