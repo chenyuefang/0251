@@ -1,15 +1,10 @@
-"""
-1.梯度
-2.负梯度
-3.学习率
-"""
 import numpy as np
 import read_data
 from show import show_cost
 
 
 def get_grad(theta, x, y):
-    grad = np.dot(np.transpose(x), (np.dot(x, theta) - y))
+    grad = np.dot(np.transpose(x), (np.dot(x, theta)-y))
     return grad
 
 
