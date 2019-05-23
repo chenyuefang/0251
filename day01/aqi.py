@@ -17,6 +17,11 @@ def gradient_descending(theta, x, y, learning_rate):
 
 
 def get_cost(theta, x, y):
+    """
+   X:  是一个矩阵
+   Y:  是一个矩阵
+   Z:  是一个矩阵
+    """
     return np.mean((np.dot(x, theta) - y) ** 2) * 0.5
 
 
