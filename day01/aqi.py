@@ -54,13 +54,16 @@ def get_aqi_value(input_data):
     """
     x = np.array(input_data)
     x = read_data.standard_data(x)
+    # 从文件中读取theta
+    with open('model.txt','r') as f:
+        theta = np.array([float(line) for line in f.readline()]).reshape(6,1)
     return np.dot(x, theta)
 
 
 train_data, validation_data, test_data = read_data.read_aqi()
 
 theta = np.zeros((6 ,1))
-learning_rate = 0.00001
+learning_rate = 0.00000011
 theta = gradient_descending(theta, train_data[0], train_data[1] , validation_data[0], validation_data[1], learning_rate)
 #test_model(theta, test_data[0], test_data[1])
 aqi_value = get_aqi_value([33,56,7,27,0.82,101])
