@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
+
 def show_cost(train_costs, validation_costs):
     """
     输出梯度下降过程中损失函数值的变化情况
@@ -27,7 +28,8 @@ def read_and_show_aqi():
     cm = np.corrcoef(aqi_data[cols].values.T)
     sns.set(font_scale=1.5)
     sns.heatmap(cm, cbar=True, annot=True, square=True,
-    fmt='.2f', annot_kws={'size':15}, yticklabels=cols, xticklabels=cols)
+                fmt='.2f', annot_kws={'size': 15}, yticklabels=cols, xticklabels=cols)
     plt.show()
 
-#read_and_show_aqi()
+
+# read_and_show_aqi()
