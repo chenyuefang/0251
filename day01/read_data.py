@@ -22,3 +22,9 @@ def read_aqi():
                                                                              train_rows:train_rows + validation_rows]
     test_x, test_y = x[train_rows + validation_rows:], label[train_rows + validation_rows:]
     return (train_x, train_y), (validation_x, validation_y), (test_x, test_y)
+
+def standard_data(input):
+    """
+    对输入数据进行标准化
+    """
+    return np.log(input)

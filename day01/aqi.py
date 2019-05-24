@@ -1,65 +1,67 @@
+# -*- coding:utf-8 -*-
 """
 是为了演示梯度下降，梯度下降有几个重要因素：
-1.梯度
-2.负梯度
-3.学习率
+1. 梯度
+2. 负梯度
+3. 学习率
 """
 import numpy as np
 import read_data
 from show import show_cost
 
-
-def get_grad(theat, x, y):
+def get_grad(theta, x, y):
     """
-    :param theat:矩阵
-    :param x: 矩阵
-    :param y: 矩阵
-    :return: 矩阵
+    x:矩阵
+    y:矩阵
+    theta:矩阵
     """
-    grad = np.dot(np.transpose(x), (np.dot(x, theat) - y))
-    # np.dot 矩阵的乘法
+    grad = np.dot(np.transpose(x), (np.dot(x, theta)-y))
     return grad
 
-
-def gradient_descending(theta, x, y, vx, vy, learning_rate):
-    train_costs = []
-    # 记录训练过程中的产生的cost
-    validation_costs = []
-    # 记录验证集上产生的cost
-    for i in range(20):
-        theta = theta - get_grad(theta, x, y) * learning_rate
+def gradient_descending(theta, x, y,v_x, v_y, learning_rate):
+    """
+    通过梯度下降算法，对线性回归模型进行训练
+    """
+    train_costs = []     # 记录训练过程中产生的cost
+    validation_costs=[]    # 记录验证集上产生的cost
+    for _ in range(200):
+        theta = theta - get_grad(theta,x,y)*learning_rate
         train_costs.append(get_cost(theta, x, y))
-        validation_costs.append(get_cost(theta, vx, vy))
+        validation_costs.append(get_cost(theta, v_x, v_y))
     show_cost(train_costs, validation_costs)
-    # print(get_cost(theta,x,y))
+    return theta
+
+
+def test_model(theta, test_x, test_y):
+    """
+    使用R方误差来测试模型的优劣
+    """
+    r = 1 - get_cost(theta, test_x, test_y)/np.var(test_y)
+    print(r)
 
 
 def get_cost(theta, x, y):
     """
-    :param theta: 矩阵
-    :param x: 矩阵
-    :param y: 矩阵
-    :return:
+    x:是一个矩阵
+    y:是一个矩阵
+    theta:是一个矩阵
     """
-    return np.mean((np.dot(x, theta) - y) ** 2)  # 取均值
-
+    return np.mean((np.dot(x, theta) - y) ** 2)
 
 def get_aqi_value(input_data):
     """
     根据用户提供的输入数据，完成aqi值的预测
-    :param input_data:
-    :return:
     """
     x = np.array(input_data)
+    x = read_data.standard_data(x)
     return np.dot(x, theta)
 
 
 train_data, validation_data, test_data = read_data.read_aqi()
 
-theta = np.zeros((6, 1))  # 六行一列的零
-learning_rate = 0.00000011
-# print(theta)
-gradient_descending(theta, train_data[0], train_data[1], validation_data[0], validation_data[1], learning_rate)
-# test_model (theta , test_data[0] ,test_data[1]  )
-aqi_value = get_aqi_value([33, 56, 7, 27, 0, 82, 101])
+theta = np.zeros((6 ,1))
+learning_rate = 0.00001
+theta = gradient_descending(theta, train_data[0], train_data[1] , validation_data[0], validation_data[1], learning_rate)
+#test_model(theta, test_data[0], test_data[1])
+aqi_value = get_aqi_value([33,56,7,27,0.82,101])
 print(aqi_value)
