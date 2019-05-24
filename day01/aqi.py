@@ -41,11 +41,25 @@ def get_cost(theta, x, y):
     :param y: 矩阵
     :return:
     """
-    return np.sum((np.dot(x, theta) - y) ** 2)  # 取均值
+    return np.mean((np.dot(x, theta) - y) ** 2)  # 取均值
+
+
+def get_aqi_value(input_data):
+    """
+    根据用户提供的输入数据，完成aqi值的预测
+    :param input_data:
+    :return:
+    """
+    x = np.array(input_data)
+    return np.dot(x, theta)
 
 
 train_data, validation_data, test_data = read_data.read_aqi()
+
 theta = np.zeros((6, 1))  # 六行一列的零
 learning_rate = 0.00000011
 # print(theta)
 gradient_descending(theta, train_data[0], train_data[1], validation_data[0], validation_data[1], learning_rate)
+# test_model (theta , test_data[0] ,test_data[1]  )
+aqi_value = get_aqi_value([33, 56, 7, 27, 0, 82, 101])
+print(aqi_value)
