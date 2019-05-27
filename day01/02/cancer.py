@@ -22,7 +22,8 @@ def gradient_descending(theta, x, y, learning_rate):
         cost = get_cost(theta, x, y)
         print (cost)
 
-x,y = data_reader.read_data()
-theta = np.zeros(x.shape[1],1)
+
+x, y = data_reader.read_data()
+theta = np.zeros(x.shape[1], 1)
 learning_rate = 0.001
-gradient_descending(theta,x,y,learning_rate)
+gradient_descending(theta, x, y, learning_rate)
