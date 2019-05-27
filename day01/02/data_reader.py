@@ -18,7 +18,7 @@ def read_data():
     # 对x进行标准化
     x = x.apply(lambda item: (item - np.min(item)) / (np.max(item) - np.min(item)), axis=1)  # axis=1 横向   axis=0  纵向
     y = y.apply(lambda label: 1 if label == 'M' else 0)
-    return x, y
+    return x.values, y.values.reshape(-1,1)
 
 # c=[i for i in range(101)]
 # c=map(lambda x:x%2==0,c)
