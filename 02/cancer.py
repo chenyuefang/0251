@@ -20,7 +20,7 @@ def get_grade(theta, x, y):
 
 
 def decay_learning_rate(leaning_rate, decay_rate, ecphocs):
-    return learning_rate / (decay_rate * ecphocs + 1)
+    return leaning_rate / (decay_rate * ecphocs + 1)
 
 
 def graident_descending(theta, x, y, learning_rate, batch_size, ecphocs=200):
