@@ -1,6 +1,9 @@
 import numpy as np
 import data_reader
 
+import show
+
+
 def sigmoid(x):
     return 1.0 / (1 + np.exp(-x))
 
@@ -16,13 +19,18 @@ def get_grade(theta, x, y):
     return np.dot(np.transpose(x), h - y)
 
 
-def graident_descending(theta, x, y, learning_rate, batch_size, ecphocs=20):
-    global cost
+def decay_learning_rate(leaning_rate, decay_rate, ecphocs):
+    return learning_rate / (decay_rate * ecphocs + 1)
+
+
+def graident_descending(theta, x, y, learning_rate, batch_size, ecphocs=200):
+    # global cost
     costs = []
+    learning_rates = []
     batchs = len(x) // batch_size
     if len(x) % batch_size != 0:
         batchs += 1
-    for _ in range(ecphocs):
+    for ecphocs in range(ecphocs):
         for batch in range(batchs):
             start = batch * batch_size % len(x)
             end = min(start + batch_size, len(x))
@@ -31,7 +39,10 @@ def graident_descending(theta, x, y, learning_rate, batch_size, ecphocs=20):
             theta = theta - learning_rate * get_grade(theta, t_x, t_y)
             cost = get_cost(theta, x, y)
         costs.append(cost)
+        learning_rate = decay_learning_rate(learning_rate, 0.99, ecphocs)
+        learning_rates.append(learning_rate)
     show.show_cost(costs)
+    show.show_cost(learning_rates)
 
 
 x, y = data_reader.read_data()
