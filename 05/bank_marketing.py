@@ -1,13 +1,9 @@
 import tensorflow as tf
 
+import read_data
+
 
 def inference(input_data):
-    """
-    正向传播计算
-    :param input_data:
-    :return:
-
-    """
     input_shape = input_data.shape
     weights = tf.get_variable(name="weights",
                               shape=[input_shape[1], 1],
@@ -15,19 +11,18 @@ def inference(input_data):
     biases = tf.get_variable(name="biases",
                              shape=[1],
                              initializer=tf.initializers.constant)
-    output = tf.matmul(input_data, weights) + biases
+    output = tf.matmul(input_data, weights)+biases
     return tf.nn.sigmoid(output)
 
 
 def train(input_x, input_y, ephocs=10, batch_size=100):
     x = tf.placeholder("float", shape=[None, input_x.shape[1]], name="x-input")
-    # input_x.shape[1]   元组： .shape，【0】是行数，【1】是列数
     y = tf.placeholder("float", shape=[None, input_y.shape[1]], name="y-input")
     output = inference(x)
     # 定义损失函数
-    cost = -tf.reduce_sum(y * tf.log(output) + (1 - y) * tf.log(1 - output))
+    cost = -tf.reduce_sum(y*tf.log(output)+(1-y)*tf.log(1-output))
     entropy_cost = tf.train.GradientDescentOptimizer(0.0003).minimize(cost)
-    batches = input_x.shape[0] // batch_size
+    batches = input_x.shape[0]//batch_size
     if input_x.shape[0] % batch_size != 0:
         batches += 1
     with tf.Session() as sess:
@@ -37,4 +32,9 @@ def train(input_x, input_y, ephocs=10, batch_size=100):
                 start = batch * batch_size % input_x.shape[0]
                 end = min(start + batch_size, input_x.shape[0])
                 sess.run([entropy_cost], feed_dict={x: input_x[start:end], y: input_y[start:end]})
-                c = sess.run([cost], feed_dict={x: input_x, y: input_y})
+            c = sess.run([cost], feed_dict={x: input_x, y: input_y})
+            print(c)
+
+
+data, label = read_data.read()
+train(data, label)
