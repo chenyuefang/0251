@@ -9,7 +9,7 @@ def read():
     data = pd.read_csv("train.csv")
     data = data.drop(["PassengerId", "Cabin", "Name", "Ticket"], axis=1)
     labe1 = data["Survived"].values.reshape(-1, 1)
-    age = int(np.mean(data["Age"].fillna(0).values))
+    age = int(np.mean(dat["Age"].fillna(0).values))
     value = {"Age": age, "Embarked": "un"}
     data = data.fillna(value)
     cols = ["Age", "SibSp", "Parch", "Fare"]
