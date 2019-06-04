@@ -35,7 +35,7 @@ def train(input_x, input_y, ephocs=10, batch_size=1000):
     if input_x.shape[0] % batch_size != 0:
         batches += 1
     with tf.Session() as sess:
-        tf.summary.FileWriter("logs,",sess.graph)
+        tf.summary.FileWriter("logs,", sess.graph)  # 保存到logs中
         sess.run(tf.global_variables_initializer())
         for _ in range(ephocs):
             for batch in range(batches):
