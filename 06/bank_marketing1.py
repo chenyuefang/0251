@@ -28,14 +28,15 @@ def train(input_x, input_y, ephocs=10, batch_size=1000):
     output = tf.nn.softmax(inference(x))
     # 定义损失函数
     cost = -tf.reduce_mean(y * tf.log(output))  # 逻辑回归的损失函数
-    entropy_cost = tf.train.AdamOptimizer(0.003).minimize(cost)
+    entropy_cost = tf.train.AdamOptimizer(0.031).minimize(cost)
     #  定义准确率的验证
     accuracy = tf.reduce_mean(tf.cast(tf.equal(tf.argmax(output, axis=1), tf.argmax(y, axis=1)), "float"))
     batches = input_x.shape[0] // batch_size
     if input_x.shape[0] % batch_size != 0:
         batches += 1
     with tf.Session() as sess:
-        sess.run(tf.initialize_all_variables())
+        tf.summary.FileWriter("logs,",sess.graph)
+        sess.run(tf.global_variables_initializer())
         for _ in range(ephocs):
             for batch in range(batches):
                 start = batch * batch_size % input_x.shape[0]
