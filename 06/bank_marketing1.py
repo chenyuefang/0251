@@ -11,6 +11,7 @@ def inference(input):
                              initializer=tf.initializers.constant)
     x = tf.matmul(input, weights) + biases
     return tf.nn.sigmoid(x)
+    weights2
 
 
 def train(input_x, input_y, ephocs=10, batch_size=100):
