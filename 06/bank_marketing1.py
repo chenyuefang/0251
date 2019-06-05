@@ -47,10 +47,12 @@ def train(input_x, input_y, ephocs=10, batch_size=1000):
             for batch in range(batches):
                 start = batch * batch_size % input_x.shape[0]
                 end = min(start + batch_size, input_x.shape[0])
-                _, merged = sess.run([entropy_cost], feed_dict={x: input_x[start:end], y: input_y[start:end]})
-            loss, predicted = sess.run([cost, accuracy])
-            c = sess.run([cost, accuracy], feed_dict={x: input_x, y: input_y})
-            print(c)
+                _, merged = sess.run([entropy_cost,merged_all], feed_dict={x: input_x[start:end], y: input_y[start:end]})
+            loss, predicted = sess.run([cost, accuracy],
+                                       feed_dict={x:input_x,y:input_y})
+            print(loss,predicted)
+            train_writer.add_summary(merged,i)
+            saver.save(sess,os.path.join("models","mnist.ckpt"),global_step=global_steps)
 
 
 mnist = read_data_sets("data\\", one_hot=True)
