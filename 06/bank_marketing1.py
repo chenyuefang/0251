@@ -27,26 +27,32 @@ def train(input_x, input_y, ephocs=10, batch_size=1000):
     y = tf.placeholder("float", shape=[None, input_y.shape[1]], name="y-input")
     output = tf.nn.softmax(inference(x))
     # 定义损失函数
-    cost = -tf.reduce_mean(y * tf.log(output))  # 逻辑回归的损失函数
-    entropy_cost = tf.train.AdamOptimizer(0.031).minimize(cost)
-    #  定义准确率的验证
-    accuracy = tf.reduce_mean(tf.cast(tf.equal(tf.argmax(output, axis=1), tf.argmax(y, axis=1)), "float"))
+    global_steps = tf.Variable(0, trainable=False)
+    cost = -tf.reduce_mean(y * tf.log(output))
+    tf.summary.scalar("cost", cost)
     batches = input_x.shape[0] // batch_size
     if input_x.shape[0] % batch_size != 0:
         batches += 1
+    learning_rate = tf.train.exponential_decay(0.09, global_steps, batches, 0.99)
+    tf.summary.scalar("learninf_rate", learning_rate)
+    entropy_cost = tf.train.AdamOptimizer(learning_rate).minimize(cost, global_step=global_steps)
+    #  定义准确率的验证
+    accuracy = tf.reduce_mean(tf.cast(tf.equal(tf.argmax(output, axis=1), tf.argmax(y, axis=1)), "float"))
+    tf.summary.scalar("accuracy", accuracy)
     with tf.Session() as sess:
         tf.summary.FileWriter("logs,", sess.graph)  # 保存到logs中
+        saver = tf.train.Saver()
         sess.run(tf.global_variables_initializer())
         for _ in range(ephocs):
             for batch in range(batches):
                 start = batch * batch_size % input_x.shape[0]
                 end = min(start + batch_size, input_x.shape[0])
-                sess.run([entropy_cost], feed_dict={x: input_x[start:end], y: input_y[start:end]})
+                _, merged = sess.run([entropy_cost], feed_dict={x: input_x[start:end], y: input_y[start:end]})
+            loss, predicted = sess.run([cost, accuracy])
             c = sess.run([cost, accuracy], feed_dict={x: input_x, y: input_y})
             print(c)
 
 
 mnist = read_data_sets("data\\", one_hot=True)
 train(mnist.train.images, mnist.train.labels)
-# print(mnist.train.images[0])
-# print(mnist.train.labels[0])
+
