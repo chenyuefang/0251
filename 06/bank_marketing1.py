@@ -1,3 +1,5 @@
+import os
+
 from tensorflow.contrib.learn.python.learn.datasets.mnist import read_data_sets
 import tensorflow as tf
 
@@ -39,22 +41,23 @@ def train(input_x, input_y, ephocs=10, batch_size=1000):
     #  定义准确率的验证
     accuracy = tf.reduce_mean(tf.cast(tf.equal(tf.argmax(output, axis=1), tf.argmax(y, axis=1)), "float"))
     tf.summary.scalar("accuracy", accuracy)
+    merged_all = tf.summary.merge_all()
     with tf.Session() as sess:
-        tf.summary.FileWriter("logs,", sess.graph)  # 保存到logs中
+        train_writer = tf.summary.FileWriter("logs,", sess.graph)  # 保存到logs中
         saver = tf.train.Saver()
         sess.run(tf.global_variables_initializer())
         for _ in range(ephocs):
             for batch in range(batches):
                 start = batch * batch_size % input_x.shape[0]
                 end = min(start + batch_size, input_x.shape[0])
-                _, merged = sess.run([entropy_cost,merged_all], feed_dict={x: input_x[start:end], y: input_y[start:end]})
+                _, merged = sess.run([entropy_cost, merged_all],
+                                     feed_dict={x: input_x[start:end], y: input_y[start:end]})
             loss, predicted = sess.run([cost, accuracy],
-                                       feed_dict={x:input_x,y:input_y})
-            print(loss,predicted)
-            train_writer.add_summary(merged,i)
-            saver.save(sess,os.path.join("models","mnist.ckpt"),global_step=global_steps)
+                                       feed_dict={x: input_x, y: input_y})
+            print(loss, predicted)
+            train_writer.add_summary(merged, i)
+            saver.save(sess, os.path.join("models", "mnist.ckpt"), global_step=global_steps)
 
 
 mnist = read_data_sets("data\\", one_hot=True)
 train(mnist.train.images, mnist.train.labels)
-
