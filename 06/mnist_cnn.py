@@ -17,6 +17,7 @@ def inference(input):
         cnn1 = cnn_layer(input, ksize=[5, 5, 1, 6], strides=[1, 1, 1, 1])
     with tf.variable_scope("cnn2", reuse=tf.AUTO_REUSE):
         cnn2 = cnn_layer(cnn1, ksize=[5, 5, 6, 16], strides=[1, 1, 1, 1])
+
     # todo: 添加两个全连接层
     cnn2 = tf.reshape(cnn2, (-1, 4 * 4 * 16))
     with tf.variable_scope("fnn1", reuse=tf.AUTO_REUSE):
@@ -93,19 +94,19 @@ def evaluate(input_x):
         return sess.run(output, feed_dict={x: input_x})
 
 
-# def read_local_image(image_name):
-#     with open(image_name, "rb") as f:
-#         data = Image.open(f).convert("L")
-#         if data.width != 28 and data.height != 28:
-#             data = np.array(data.resize((28, 28)))
-#         data = 1.0 - np.array(data) / 255.0
-#         data = data.reshape(1, 784)
-#         print(evaluate(data))
+def read_local_image(image_name):
+    with open(image_name, "rb") as f:
+        data = Image.open(f).convert("L")
+        if data.width != 28 and data.height != 28:
+            data = np.array(data.resize((28, 28)))
+        data = 1.0 - np.array(data) / 255.0
+        data = data.reshape(1, 784)
+        print(evaluate(data))
 
 
-# read_local_image("1.jpg")
+read_local_image("1.jpg")
 
-
+"""
 mnist = read_data_sets("data\\", one_hot=True)
 # train(mnist.train.images, mnist.train.labels)
 with open(os.path.join("models", "checkpoint"), "r") as f:
@@ -123,4 +124,4 @@ with open(os.path.join("models", "checkpoint"), "r") as f:
             max = model_score[key]
             release_model = key
     print(key)
-
+"""
